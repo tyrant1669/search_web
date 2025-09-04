@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SearchIt</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .logo {
+      font-size: 48px;
+      font-weight: bold;
+      color: #4285f4;
+      margin-bottom: 20px;
+    }
+    form {
+      width: 100%;
+      max-width: 500px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 20px;
+      font-size: 18px;
+      border: 1px solid #ccc;
+      border-radius: 24px;
+      outline: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    input[type="submit"] {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo">SearchIt</div>
+
+  <form action="https://formspree.io/f/mdklpgvy" method="POST">
+    <input type="text" name="searchQuery" placeholder="Search..." required />
+    <input type="submit" />
+  </form>
+
+  <script>
+    const input = document.querySelector('input[name="searchQuery"]');
+    input.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        input.form.submit();
+      }
+    });
+  </script>
+
+</body>
+</html>
