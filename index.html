@@ -15,26 +15,45 @@
       height: 100vh;
       margin: 0;
     }
+
     .logo {
       font-size: 48px;
       font-weight: bold;
       color: #4285f4;
       margin-bottom: 20px;
     }
-    form {
+
+    .search-container {
+      position: relative;
       width: 100%;
       max-width: 500px;
     }
+
     input[type="text"] {
       width: 100%;
-      padding: 12px 20px;
+      padding: 12px 45px 12px 20px;
       font-size: 18px;
       border: 1px solid #ccc;
       border-radius: 24px;
       outline: none;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    input[type="submit"] {
+
+    .search-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      width: 20px;
+      height: 20px;
+      fill: #888;
+    }
+
+    .message {
+      margin-top: 15px;
+      font-size: 16px;
+      color: green;
       display: none;
     }
   </style>
@@ -43,17 +62,42 @@
 
   <div class="logo">SearchIt</div>
 
-  <form action="https://formspree.io/f/mdklpgvy" method="POST">
+  <form id="searchForm" class="search-container">
     <input type="text" name="searchQuery" placeholder="Search..." required />
-    <input type="submit" />
+    <svg class="search-icon" viewBox="0 0 24 24">
+      <path d="M15.5 14h-.79l-.28-.27a6.471 6.471 0 001.48-5.34C15.02 5.59 12.43 3 9.25 3S3.48 5.59 3.48 8.39c0 2.8 2.59 5.39 5.77 5.39 1.61 0 3.07-.66 4.1-1.73l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6.25 0C7.01 14 5.48 12.47 5.48 10.39S7.01 6.78 9.25 6.78s3.77 1.53 3.77 3.61-1.53 3.61-3.77 3.61z"/>
+    </svg>
   </form>
 
+  <div class="message" id="confirmation">Search submitted!</div>
+
   <script>
-    const input = document.querySelector('input[name="searchQuery"]');
+    const form = document.getElementById('searchForm');
+    const input = form.querySelector('input[name="searchQuery"]');
+    const confirmation = document.getElementById('confirmation');
+
     input.addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
         e.preventDefault();
-        input.form.submit();
+
+        fetch("https://formspree.io/f/YOUR_FORM_ID", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({ searchQuery: input.value })
+        })
+        .then(response => {
+          if (response.ok) {
+            confirmation.style.display = "block";
+            input.value = "";
+          } else {
+            confirmation.textContent = "Something went wrong.";
+            confirmation.style.color = "red";
+            confirmation.style.display = "block";
+          }
+        });
       }
     });
   </script>
